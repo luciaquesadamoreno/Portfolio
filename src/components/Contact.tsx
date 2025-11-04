@@ -22,35 +22,35 @@ export function Contact() {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    
+  
     try {
+      const form = new FormData();
+      form.append("email", data.correo);
+      form.append("nombre", data.nombre);
+      form.append("apellidos", data.apellidos);
+      form.append("asunto", data.asunto);
+      form.append("mensaje", data.mensaje);
       // Aquí se puede integrar con un servicio de envío de emails como:
       // - Formspree (https://formspree.io)
       // - EmailJS (https://www.emailjs.com)
       // - Web3Forms (https://web3forms.com)
       
-      // Ejemplo con mailto como alternativa básica:
-      const mailtoLink = `mailto:luciaqm2003@gmail.com?subject=${encodeURIComponent(data.asunto)}&body=${encodeURIComponent(
-        `Nombre: ${data.nombre} ${data.apellidos}\nCorreo: ${data.correo}\n\nMensaje:\n${data.mensaje}`
-      )}`;
-      
       // Para producción, reemplaza esto con una llamada a tu servicio de email preferido:
-        const response = await fetch('https://formspree.io/f/mjkpqday', {
+        const res = await fetch('https://formspree.io/f/mjkpqday', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
          body: JSON.stringify(data),
       });
-      
-      // Simulación de envío exitoso
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      window.location.href = mailtoLink;
-      
-      toast.success('¡Mensaje enviado!', {
-        description: 'Gracias por contactar. Responderé lo antes posible.',
-      });
-      
-      reset();
+
+      const payload = await res.json().catch(() => ({}));
+
+      if (!res.ok || (payload && payload.errors)) {
+        console.error("Formspree error:", res.status, payload);
+        throw new Error(
+          payload?.errors?.map((e: any) => e.message).join(", ") ||
+          `Error ${res.status}`
+        );
+      }
     } catch (error) {
       toast.error('Error al enviar', {
         description: 'Ha ocurrido un error. Por favor, inténtalo de nuevo.',
@@ -201,7 +201,7 @@ export function Contact() {
           <div className="space-y-2 text-slate-600">
             <p>
               <Mail className="w-4 h-4 inline mr-2" />
-              Email: <a href="mailto:luciaqm2003@gmail.com" className="text-blue-600 hover:underline">lucia.quesada@example.com</a>
+              Email: <a href="mailto:luciaqm2003@gmail.com" className="text-blue-600 hover:underline">luciaqm2003@gmail.com</a>
             </p>
             <p className="text-sm">
               También puedes encontrarme en mis redes sociales en el footer de la página.
