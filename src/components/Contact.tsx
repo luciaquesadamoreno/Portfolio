@@ -85,8 +85,17 @@ export function Contact() {
                     <User className="w-4 h-4 inline mr-2" />
                     Nombre
                   </Label>
-                  <input id="nombre" placeholder="Tu nombre" {...register("nombre", { required: "El nombre es obligatorio" })} />
-
+                  <Input
+                    id="nombre"
+                    placeholder="Tu nombre"
+                    {...register('nombre', { 
+                      required: 'El nombre es obligatorio',
+                      minLength: {
+                        value: 2,
+                        message: 'El nombre debe tener al menos 2 caracteres'
+                      }
+                    })}
+                  />
                   {errors.nombre && (
                     <p className="text-sm text-red-600">{errors.nombre.message}</p>
                   )}
