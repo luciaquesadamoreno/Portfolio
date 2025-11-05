@@ -13,7 +13,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
       style={
         {
           "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
+          /* Forzar texto negro para mejorar legibilidad en las notificaciones */
+          "--normal-text": "#000000",
+          "--success-text": "#000000",
+          "--error-text": "#000000",
           "--normal-border": "var(--border)",
         } as React.CSSProperties
       }
